@@ -1,0 +1,12 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy:2.2.1'
+    compile 'com.netflix.rxjava:rxjava-core:0.17.0-RC2'
+	compile 'com.netflix.rxnetty:rx-netty:0.2.6'
+    compile 'org.codehaus.jackson:jackson-core-asl:1.9.2'
+    testCompile 'junit:junit-dep:4.10'
+    testCompile 'org.json:json:20140107'
+}
