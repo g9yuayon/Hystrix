@@ -9,6 +9,10 @@ import rx.schedulers.Schedulers
 
 class HystrixStreamAggregatorTest {
 
+    public static void main(String[] args) {
+        new HystrixStreamAggregatorTest().demo();
+    }
+    
     @Test
     public void demo() {
         
