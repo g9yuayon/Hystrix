@@ -67,14 +67,17 @@ public class HystrixStreamSource {
 
     public static Observable<Map<String, Object>> getHystrixStream(final InstanceInfo instance, String hystrixUrl) {
         HttpRequest<Object> request = HttpRequest.create(HttpMethod.GET, hystrixUrl);
-        request.getHeaders().add(HttpHeaders.Names.HOST, instance.getHostName());
+        // TODO This is temporary fix due to missing HOST header in RxNetty. Will remove this when the fixed RxNetty is released
+        //request.getHeaders().add(HttpHeaders.Names.HOST, instance.getHostName());
+
         return RxNetty.createHttpClient(instance.getHostName(), instance.getPort(), PipelineConfigurators.sseClientConfigurator())
             .submit(request)
             .flatMap(new Func1<HttpResponse<ServerSentEvent>, Observable<ServerSentEvent>>() {
                 @Override
                 public Observable<ServerSentEvent> call(HttpResponse<ServerSentEvent> response) {
-                    // TODO handle error response
-                    System.out.println("Response: "+response.getStatus());
+                    if(response.getStatus().code() >= 400) {
+                        throw new RuntimeException(String.format("Request to instance %s failed: %s", instance.getHostName(), response.getStatus()));
+                    }
                     return response.getContent();
                 }
             })
