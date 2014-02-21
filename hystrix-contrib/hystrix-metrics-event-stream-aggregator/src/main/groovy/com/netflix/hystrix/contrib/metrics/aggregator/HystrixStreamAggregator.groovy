@@ -1,10 +1,10 @@
 package com.netflix.hystrix.contrib.metrics.aggregator
 
-import java.util.concurrent.TimeUnit
-
 import rx.Observable
 import rx.functions.Func1
 import rx.observables.GroupedObservable
+
+import java.util.concurrent.TimeUnit
 
 class HystrixStreamAggregator {
 
@@ -20,7 +20,9 @@ class HystrixStreamAggregator {
 
         System.out.println("Run HystrixStreaming Job!");
 
-        return stream.filter({ Map<String, Object> data ->
+        return stream.flatMap({Observable<Map<String, Object>> s ->
+              return s;
+        }).filter({ Map<String, Object> data ->
             return data.get("type").equals("HystrixCommand");
         }).groupBy({ Map<String, Object> json ->
             return String.valueOf(json.get("name"));
